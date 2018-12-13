@@ -19,6 +19,35 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findProductID($ProductID): array
+   {
+       // automatically knows to select Products
+       // the "p" is an alias you'll use in the rest of the query
+
+       $conn = $this->getEntityManager()->getConnection();
+       $sql = '
+        SELECT * FROM product p
+        WHERE p.product_id = :ProductID
+        ';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['ProductID' => $ProductID]);
+
+    // returns an array of arrays (i.e. a raw data set)
+    return $stmt->fetchAll();
+
+       // to get just one result:
+       // $product = $qb->setMaxResults(1)->getOneOrNullResult();
+   }
+
+   public function findUserID($ProductID): array
+  {
+      
+   // returns an array of arrays (i.e. a raw data set)
+   return $stmt->fetchAll();
+
+      // to get just one result:
+      // $product = $qb->setMaxResults(1)->getOneOrNullResult();
+  }
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
@@ -36,15 +65,14 @@ class ProductRepository extends ServiceEntityRepository
     }
     */
 
-    /*
     public function findOneBySomeField($value): ?Product
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
+            ->andWhere('p.ProductID = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
 }

@@ -21,6 +21,17 @@ class Product
      */
     private $status;
 
+    /**
+     * @ORM\Column(type="string", length=8)
+     */
+    private $ProductID;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="products")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $userID;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -34,6 +45,30 @@ class Product
     public function setStatus(?status $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getProductID(): ?string
+    {
+        return $this->ProductID;
+    }
+
+    public function setProductID(string $ProductID): self
+    {
+        $this->ProductID = $ProductID;
+
+        return $this;
+    }
+
+    public function getUserID(): ?User
+    {
+        return $this->userID;
+    }
+
+    public function setUserID(?User $userID): self
+    {
+        $this->userID = $userID;
 
         return $this;
     }

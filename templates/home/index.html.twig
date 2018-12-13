@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home page{% endblock %}
+
+{% block body %}
+
+<section class="ui container">
+
+    <form class="ui form" action="message" method="post">
+
+        <div class="field">
+            <label>Csomag azonosító: </label>
+            <input type="text" name="productID">
+        </div>
+
+        <button class="ui button" type="submit"> Keresés</button>
+
+    </form>
+
+</section>
+
+{% endblock %}
