@@ -5,7 +5,7 @@ Ez lesz a user bejelentkezés utáni home oldala
 */
 
 namespace App\Controller;
-
+use  SecurityController ;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Product;
@@ -27,6 +27,13 @@ class UserHomeController extends AbstractController
     public function ShowOwnProducts()
     {
       $user = $this->getUser();
+      if(!$user)
+      {
+        throw $this->createNotFoundException(
+            'No user . Please login'
+        );
+
+      }
 
     $products = $this->getDoctrine()
         ->getRepository(Product::class)

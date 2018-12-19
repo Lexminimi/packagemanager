@@ -13,7 +13,7 @@ use Symfony\Component\Debug\Debug;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/home", name="home")
+     * @Route("/search", name="search")
      */
     public function index()
     {

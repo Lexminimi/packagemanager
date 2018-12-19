@@ -2,9 +2,8 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -18,7 +17,11 @@ class User implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    /**
+        * @Assert\NotBlank
+        * @Assert\Length(max=4096)
+        */
+       private $plainPassword;
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
@@ -30,19 +33,10 @@ class User implements UserInterface
     private $roles = [];
 
     /**
-      * @ORM\Column(type="string", unique=true)
-      */
-     private $apiToken;
-
-     /**
-      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="userID")
-      */
-     private $products;
-
-     public function __construct()
-     {
-         $this->products = new ArrayCollection();
-     }
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
 
     public function getId(): ?int
     {
@@ -60,6 +54,16 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function getPlainPassword()
+   {
+       return $this->plainPassword;
+   }
+
+   public function setPlainPassword($password)
+   {
+       $this->plainPassword = $password;
+   }
 
     /**
      * A visual identifier that represents this user.
@@ -93,9 +97,16 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        // not needed for apps that do not check user passwords
+        return (string) $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     /**
@@ -103,7 +114,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        // not needed for apps that do not check user passwords
+        // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
     /**
@@ -113,36 +124,5 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $product): self
-    {
-        if (!$this->products->contains($product)) {
-            $this->products[] = $product;
-            $product->setUserID($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduct(Product $product): self
-    {
-        if ($this->products->contains($product)) {
-            $this->products->removeElement($product);
-            // set the owning side to null (unless already changed)
-            if ($product->getUserID() === $this) {
-                $product->setUserID(null);
-            }
-        }
-
-        return $this;
     }
 }
